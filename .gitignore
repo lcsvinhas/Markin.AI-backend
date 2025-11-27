@@ -1,7 +1,10 @@
-# Pastas 
-base/
+# Pastas
+base/*
+!base/.gitkeep
+db/*
+!db/.gitkeep
 .venv/
-__pycache__/    
+__pycache__/
 *.pyc
 
 # Ambiente
