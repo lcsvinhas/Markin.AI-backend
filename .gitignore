@@ -1,0 +1,8 @@
+# Pastas 
+base/
+.venv/
+__pycache__/    
+*.pyc
+
+# Ambiente
+.env
