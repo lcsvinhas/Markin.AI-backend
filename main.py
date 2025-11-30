@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 
 from langchain_ollama import OllamaLLM
 from langchain_chroma import Chroma
@@ -28,6 +29,17 @@ llm = OllamaLLM(
 app = FastAPI(
     title="Markin.AI",
     description="Faça sua pergunta para o Markin.AI e receba respostas baseadas na base de conhecimento interna.",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
