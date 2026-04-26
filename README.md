@@ -1,4 +1,4 @@
-# Markin.AI (RAG Local com FastAPI + Ollama + Qwen 2.5)
+# Markin.AI (RAG com FastAPI + Groq + Llama 3.3)
 
 > Componente back-end oficial do Markin.AI, responsável por processamento de conhecimento, pipelines de ingestão, RAG, governança e exposição de APIs para o widget e integrações corporativas.
 
@@ -25,7 +25,7 @@ Pipelines de ingestão e normalização de conhecimento (PDFs)
 - Construção do banco vetorial
 - RAG (Retrieval Augmented Generation)
 - API REST com FastAPI
-- Integração direta com Ollama
+- Integração com Groq API
 - Respostas otimizadas para o widget e integrações externas
 
 Este back-end funciona tanto para:
@@ -54,7 +54,8 @@ Este back-end funciona tanto para:
                                 v
                 +-------------------------------+
                 |   Motor de RAG + Embeddings   |
-                |   Qwen 2.5 • LangChain        |
+                | Llama 3.3 70B • Groq API      |
+                |       • LangChain             |
                 +--------------+----------------+
                                |
                                v
@@ -93,9 +94,9 @@ Tecnologias utilizadas:
 
 - **FastAPI**
 - **Python 3.12**
-- **Ollama**
-- **Qwen 2.5 (0.5B)**
-- **LangChain / LlamaIndex**
+- **Groq API**
+- **Llama 3.3 70B**
+- **LangChain**
 - **ChromaDB**
 - **Pydantic**
 - **Uvicorn**
@@ -112,112 +113,91 @@ O projeto deve ser executado com Python 3.12 para garantir compatibilidade com t
 
 Verifique sua versão:
 
-```powershell
-
+```bash
 python --version
-
 ```
 
 Se aparecer Python 3.12.x, está ok.
-O Python 3.14 ainda não possui compatibilidade com todas as libs utilizadas.
 
 Caso não tenha, baixe aqui:
 https://www.python.org/downloads/release/python-3120/
 
 ---
 
-#### 2. Instale o Ollama
+#### 2. Crie e ative o ambiente virtual
 
-Baixe o Ollama conforme seu sistema operacional:
-[https://ollama.com/download](https://ollama.com/download)
-
-#### 3. Baixe o modelo Qwen 2.5 0.5B
-
-O projeto usa o modelo Qwen 2.5 0.5B:
-
-```powershell
-
-ollama pull qwen2.5:0.5b
-
-```
-
-Se der timeout:
-
-```powershell
-
-ollama pull qwen2.5:0.5b --timeout 0
-
-```
-
-### Instalação do Projeto
-
-#### 1. Crie um ambiente virtual
-
-```powershell
-
+```bash
 python -m venv .venv
-
 ```
 
-#### 2. Ative o ambiente virtual e instale as dependências
+Linux / macOS:
+```bash
+source .venv/bin/activate
+```
 
+Windows:
 ```powershell
-
 .venv\Scripts\Activate.ps1
-    pip install -r requirements.txt
-
 ```
 
-### Pipelines de Ingestão e Banco Vetorial
+#### 3. Instale as dependências
 
-#### 1. Crie a pasta de base
-
-```powershell
-
-base/
-
+```bash
+pip install -r requirements.txt
 ```
-
-Coloque dentro dela todos os PDFs que serão indexados no Markin.AI.
-
-#### 2. Gere o banco vetorial
-
-Execute:
-
-```powershell
-
-python criar_db.py
-
-```
-
-Esse script irá:
-
-- Ler os PDFs da pasta `base`
-- Gerar embeddings usando Ollama
-- Criar um banco vetorial local com ChromaDB
 
 ---
 
-### Servidor FastAPI
+### Como rodar o projeto
 
-#### 1. Inicie o servidor
+#### 1. Adicione seus PDFs
 
-```powershell
-
-uvicorn main:app
+Coloque dentro da pasta `base/` todos os PDFs que serão indexados pelo Markin.AI:
 
 ```
+base/
+├── documento1.pdf
+├── documento2.pdf
+└── ...
+```
+
+#### 2. Configure a chave de API
+
+Crie o arquivo `.env` e preencha com sua chave Groq (obtenha gratuitamente em https://console.groq.com/keys):
+
+```
+GROQ_API_KEY=sua_chave_aqui
+```
+
+#### 3. Crie o banco vetorial
+
+Execute o script de ingestão. Ele irá:
+
+- Carregar os PDFs da pasta `base/` em paralelo
+- Dividir o conteúdo em chunks
+- Gerar embeddings com HuggingFace (nomic-embed-text-v1.5)
+- Criar o banco vetorial local com ChromaDB na pasta `db/`
+
+```bash
+python criar_db.py
+```
+
+#### 4. Suba o servidor
+
+```bash
+uvicorn main:app
+```
+
+---
 
 ### Uso
 
-#### 1. Acesse o Swagger UI
+#### Acesse o Swagger UI
 
 Abra no navegador:
 
-```powershell
-
+```
 http://localhost:8000/docs
-
 ```
 
 A interface Swagger UI permitirá:

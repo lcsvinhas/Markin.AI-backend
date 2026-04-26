@@ -3,11 +3,15 @@ from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-from langchain_ollama import OllamaLLM
+from langchain_groq import ChatGroq
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
+from dotenv import load_dotenv
+import os
 
-MODEL_NAME = "qwen2.5:0.5b"
+load_dotenv()
+
+GROQ_MODEL = "llama-3.3-70b-versatile"
 DB_DIR = "db"
 MAX_CONTEXT_CHARS = 3500
 
@@ -21,9 +25,10 @@ db = Chroma(
     embedding_function=embeddings
 )
 
-llm = OllamaLLM(
-    model=MODEL_NAME,
-    streaming=True
+llm = ChatGroq(
+    model=GROQ_MODEL,
+    temperature=0,
+    api_key=os.getenv("GROQ_API_KEY"),
 )
 
 app = FastAPI(
@@ -76,7 +81,7 @@ async def perguntar(req: PerguntaInput):
     """.strip()
 
     def gerar_resposta():
-        for token in llm.stream(prompt):
-            yield token
+        for chunk in llm.stream(prompt):
+            yield chunk.content
 
     return StreamingResponse(gerar_resposta(), media_type="text/plain")
