@@ -4,13 +4,38 @@
 
 Este repositório complementa o front-end do Markin.AI e fornece toda a base inteligente que transforma documentos em respostas estruturadas, contextualizadas e auditáveis.
 
+---
+
+## Rodando com Docker
+
+Não é necessário instalar Python, criar ambientes virtuais ou rodar scripts manualmente. Apenas:
+
+**1.** Coloque seus PDFs na pasta `base/`
+
+**2.** Renomeie o arquivo `.env.exemplo` para `.env` e preencha com sua chave Groq (obtenha gratuitamente em https://console.groq.com/keys):
+
+```
+GROQ_API_KEY=sua_chave_aqui
+```
+
+**3.** Suba a aplicação:
+
+```bash
+docker compose up
+```
+
+> A primeira execução é demorada: a imagem é construída, as dependências são instaladas, o modelo de embeddings é baixado e o banco vetorial é criado a partir dos PDFs. As execuções seguintes são bem mais rápidas.
+
+---
+
 📚 **Sumário**
 
 1. [Visão Geral](#visão-geral)
 2. [Arquitetura do Produto](#arquitetura-do-produto)
 3. [Documentação e Materiais](#documentação-e-materiais)
-4. [Front-end (Typescript / React)](https://github.com/lcsvinhas/Markin.AI-frontend)
-5. [Equipe](#equipe)
+4. [Como rodar o projeto](#como-rodar-o-projeto)
+5. [Front-end (Typescript / React)](https://github.com/lcsvinhas/Markin.AI-frontend)
+6. [Equipe](#equipe)
    <br><br>
 
 ## Visão Geral
@@ -163,30 +188,58 @@ base/
 
 #### 2. Configure a chave de API
 
-Crie o arquivo `.env` e preencha com sua chave Groq (obtenha gratuitamente em https://console.groq.com/keys):
+O repositório inclui um arquivo `.env.example` com o formato esperado. Renomeie-o para `.env` e substitua pelo valor real da sua chave Groq (obtenha gratuitamente em https://console.groq.com/keys):
+
+```bash
+cp .env.example .env
+```
 
 ```
 GROQ_API_KEY=sua_chave_aqui
 ```
 
-#### 3. Crie o banco vetorial
+#### 3. Suba com Docker
 
-Execute o script de ingestão. Ele irá:
+```bash
+docker compose up
+```
 
-- Carregar os PDFs da pasta `base/` em paralelo
-- Dividir o conteúdo em chunks
-- Gerar embeddings com HuggingFace (nomic-embed-text-v1.5)
-- Criar o banco vetorial local com ChromaDB na pasta `db/`
+> Na primeira execução o processo demora mais: a imagem é construída, as dependências são instaladas, o modelo de embeddings é baixado e o banco vetorial é criado a partir dos PDFs. As execuções seguintes são bem mais rápidas.
+
+---
+
+#### Alternativa: rodar sem Docker
+
+<details>
+<summary>Expandir instruções para rodar localmente</summary>
+
+Crie e ative o ambiente virtual:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+.venv\Scripts\Activate.ps1  # Windows
+```
+
+Instale as dependências:
+
+```bash
+pip install -r requirements.txt
+```
+
+Crie o banco vetorial:
 
 ```bash
 python criar_db.py
 ```
 
-#### 4. Suba o servidor
+Suba o servidor:
 
 ```bash
 uvicorn main:app
 ```
+
+</details>
 
 ---
 

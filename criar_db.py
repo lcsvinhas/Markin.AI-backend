@@ -68,7 +68,9 @@ def vetorizar_chunks(chunks):
     )
 
     if os.path.exists(DB_DIR):
-        shutil.rmtree(DB_DIR)
+        for item in os.listdir(DB_DIR):
+            item_path = os.path.join(DB_DIR, item)
+            shutil.rmtree(item_path) if os.path.isdir(item_path) else os.remove(item_path)
 
     total_lotes = (len(chunks) + BATCH_SIZE - 1) // BATCH_SIZE
     print(f"Inserindo {len(chunks)} chunks em {total_lotes} lote(s)...")
