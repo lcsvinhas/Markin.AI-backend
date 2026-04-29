@@ -1,4 +1,4 @@
-# Markin.AI (RAG com FastAPI + Groq + Llama 3.3)
+# Markin.AI — Back-end (RAG com FastAPI + Groq + Llama 3.3)
 
 > Componente back-end oficial do Markin.AI, responsável por processamento de conhecimento, pipelines de ingestão, RAG, governança e exposição de APIs para o widget e integrações corporativas.
 
@@ -6,43 +6,23 @@ Este repositório complementa o front-end do Markin.AI e fornece toda a base int
 
 ---
 
-## Rodando com Docker
-
-Não é necessário instalar Python, criar ambientes virtuais ou rodar scripts manualmente. Apenas:
-
-**1.** Coloque seus PDFs na pasta `base/`
-
-**2.** Renomeie o arquivo `.env.exemplo` para `.env` e preencha com sua chave Groq (obtenha gratuitamente em https://console.groq.com/keys):
-
-```
-GROQ_API_KEY=sua_chave_aqui
-```
-
-**3.** Suba a aplicação:
-
-```bash
-docker compose up
-```
-
-> A primeira execução é demorada: a imagem é construída, as dependências são instaladas, o modelo de embeddings é baixado e o banco vetorial é criado a partir dos PDFs. As execuções seguintes são bem mais rápidas.
-
----
-
-📚 **Sumário**
+## 📚 Sumário
 
 1. [Visão Geral](#visão-geral)
 2. [Arquitetura do Produto](#arquitetura-do-produto)
-3. [Documentação e Materiais](#documentação-e-materiais)
-4. [Como rodar o projeto](#como-rodar-o-projeto)
-5. [Front-end (Typescript / React)](https://github.com/lcsvinhas/Markin.AI-frontend)
-6. [Equipe](#equipe)
-   <br><br>
+3. [Tecnologias](#tecnologias)
+4. [Configuração inicial](#configuração-inicial)
+5. [Rodando o projeto](#rodando-o-projeto)
+6. [Uso](#uso)
+7. [Documentação e Materiais](#documentação-e-materiais)
+8. [Front-end](#front-end)
+9. [Equipe](#equipe)
+
+---
 
 ## Visão Geral
 
-O **Markin.AI** implementa:
-
-Pipelines de ingestão e normalização de conhecimento (PDFs)
+O **Markin.AI** implementa pipelines de ingestão e normalização de conhecimento a partir de PDFs, com:
 
 - Redação de PII (dados sensíveis)
 - Extração de metadados
@@ -59,12 +39,12 @@ Este back-end funciona tanto para:
 - Versão SaaS / cloud
 - Integrações white-label
 - Ambientes locais de desenvolvimento
-  <br><br>
+
+---
 
 ## Arquitetura do Produto
 
 ```plaintext
-
                      +---------------------+
                      |      Front-end      |
                      |     (React + TS)    |
@@ -94,28 +74,11 @@ Este back-end funciona tanto para:
                 |  Base de Conhecimento         |
                 |  (Embeddings + Metadados)     |
                 +-------------------------------+
-
 ```
 
-<br><br>
+---
 
-## Documentação e Materiais
-
-Aqui você encontra todos os documentos estratégicos e técnicos do projeto.
-
-📌 Estrutura do Case<br>
-👉 [/docs/estrutura-do-case.md](https://github.com/lcsvinhas/Markin.AI-frontend/blob/main/docs/estrutura-do-case.md)
-
-📌 Levantamento Inicial<br>
-👉 [/docs/levantamento-inicial.md](https://github.com/lcsvinhas/Markin.AI-frontend/blob/main/docs/CopilotoAI_Levantamento_Inicial.md)
-
-📌 Soluções, Mitigações e outros dados para a viabilidade<br>
-👉 [/docs/levantamento-inicial.md](#)
-<br><br>
-
-## Markin.AI Back-end
-
-Tecnologias utilizadas:
+## Tecnologias
 
 - **FastAPI**
 - **Python 3.12**
@@ -125,14 +88,52 @@ Tecnologias utilizadas:
 - **ChromaDB**
 - **Pydantic**
 - **Uvicorn**
-  <br>
 
-Arquitetura baseada em _features_ e componentes reutilizáveis
-<br>
+Arquitetura baseada em *features* e componentes reutilizáveis.
 
-### Instalação
+---
 
-#### 1. Python 3.12 (recomendado)
+## Configuração inicial
+
+Antes de subir o projeto (com Docker ou localmente), faça os dois passos abaixo:
+
+**1.** Coloque seus PDFs na pasta `base/`:
+
+```
+base/
+├── documento1.pdf
+├── documento2.pdf
+└── ...
+```
+
+**2.** Renomeie o arquivo `.env.exemplo` para `.env` e preencha com sua chave Groq (obtenha gratuitamente em https://console.groq.com/keys):
+
+
+```env
+GROQ_API_KEY=sua_chave_aqui
+```
+
+---
+
+## Rodando o projeto
+
+Você pode rodar o Markin.AI de duas formas: com **Docker** (recomendado) ou **localmente** com Python.
+
+### 🐳 Com Docker
+
+Não é necessário instalar Python, criar ambientes virtuais ou rodar scripts manualmente. Apenas suba a aplicação:
+
+```bash
+docker compose up
+```
+
+> ⏳ A primeira execução é demorada: a imagem é construída, as dependências são instaladas, o modelo de embeddings é baixado e o banco vetorial é criado a partir dos PDFs. As execuções seguintes são bem mais rápidas.
+
+### 💻 Localmente (sem Docker)
+
+<summary>Expandir instruções para rodar localmente</summary>
+
+#### 1. Python 3.12 (obrigatório)
 
 O projeto deve ser executado com Python 3.12 para garantir compatibilidade com todas as bibliotecas utilizadas.
 
@@ -142,12 +143,7 @@ Verifique sua versão:
 python --version
 ```
 
-Se aparecer Python 3.12.x, está ok.
-
-Caso não tenha, baixe aqui:
-https://www.python.org/downloads/release/python-3120/
-
----
+Caso não tenha, baixe em: https://www.python.org/downloads/release/python-3120/
 
 #### 2. Crie e ative o ambiente virtual
 
@@ -171,94 +167,53 @@ Windows:
 pip install -r requirements.txt
 ```
 
----
-
-### Como rodar o projeto
-
-#### 1. Adicione seus PDFs
-
-Coloque dentro da pasta `base/` todos os PDFs que serão indexados pelo Markin.AI:
-
-```
-base/
-├── documento1.pdf
-├── documento2.pdf
-└── ...
-```
-
-#### 2. Configure a chave de API
-
-O repositório inclui um arquivo `.env.example` com o formato esperado. Renomeie-o para `.env` e substitua pelo valor real da sua chave Groq (obtenha gratuitamente em https://console.groq.com/keys):
-
-```bash
-cp .env.example .env
-```
-
-```
-GROQ_API_KEY=sua_chave_aqui
-```
-
-#### 3. Suba com Docker
-
-```bash
-docker compose up
-```
-
-> Na primeira execução o processo demora mais: a imagem é construída, as dependências são instaladas, o modelo de embeddings é baixado e o banco vetorial é criado a partir dos PDFs. As execuções seguintes são bem mais rápidas.
-
----
-
-#### Alternativa: rodar sem Docker
-
-<details>
-<summary>Expandir instruções para rodar localmente</summary>
-
-Crie e ative o ambiente virtual:
-
-```bash
-python -m venv .venv
-source .venv/bin/activate  # Linux/macOS
-.venv\Scripts\Activate.ps1  # Windows
-```
-
-Instale as dependências:
-
-```bash
-pip install -r requirements.txt
-```
-
-Crie o banco vetorial:
+#### 4. Crie o banco vetorial
 
 ```bash
 python criar_db.py
 ```
 
-Suba o servidor:
+#### 5. Suba o servidor
 
 ```bash
 uvicorn main:app
 ```
 
-</details>
-
 ---
 
-### Uso
+## Uso
 
-#### Acesse o Swagger UI
-
-Abra no navegador:
+Com o servidor rodando, acesse o **Swagger UI** no navegador:
 
 ```
 http://localhost:8000/docs
 ```
 
-A interface Swagger UI permitirá:
+A interface permitirá:
 
 - Enviar perguntas
 - Testar endpoints
 - Visualizar respostas do RAG
 - Inspecionar o fluxo de consulta
+
+---
+
+## Documentação e Materiais
+
+Documentos estratégicos e técnicos do projeto:
+
+- 📌 **Estrutura do Case** — [/docs/estrutura-do-case.md](https://github.com/lcsvinhas/Markin.AI-frontend/blob/main/docs/estrutura-do-case.md)
+- 📌 **Levantamento Inicial** — [/docs/CopilotoAI_Levantamento_Inicial.md](https://github.com/lcsvinhas/Markin.AI-frontend/blob/main/docs/CopilotoAI_Levantamento_Inicial.md)
+- 📌 **Soluções, Mitigações e Viabilidade** — *(em breve)*
+
+---
+
+## Front-end
+
+O front-end (TypeScript / React) está disponível em:
+👉 [Markin.AI-frontend](https://github.com/lcsvinhas/Markin.AI-frontend)
+
+---
 
 ## Equipe
 
